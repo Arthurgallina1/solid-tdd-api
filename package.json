@@ -6,6 +6,7 @@
   "lint-staged": {
     "*.js": [
       "standard --fix",
+      "test:staged",
       "git add"
     ]
   },
@@ -26,6 +27,7 @@
     "mongoose": "^5.10.9"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --watchAll",
+    "test:staged": "jest"
   }
 }

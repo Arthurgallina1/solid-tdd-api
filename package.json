@@ -4,10 +4,26 @@
   "main": "index.js",
   "license": "MIT",
   "lint-staged": {
-    "*.js": ["standard"]
-   },
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "devDependencies": {
+    "husky": "^5.0.0-beta.0",
+    "jest": "^26.5.3",
     "lint-staged": "^10.4.2",
     "standard": "^14.3.4"
+  },
+  "dependencies": {
+    "eslint": "^7.11.0"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

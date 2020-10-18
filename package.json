@@ -2,5 +2,12 @@
   "name": "solid",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": ["standard"]
+   },
+  "devDependencies": {
+    "lint-staged": "^10.4.2",
+    "standard": "^14.3.4"
+  }
 }

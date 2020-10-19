@@ -1,7 +1,9 @@
 const LoginRouter = require("./login-router");
 const MissingParamError = require("../helpers/missing-param");
+const UnauthorizedError = require("../helpers/unauthorized-error");
 
 const makeSut = () => {
+    // isso é um mock pra auxiliar os testes no login router
     class AuthUseCase {
         auth(email, password) {
             this.email = email;
@@ -61,5 +63,17 @@ describe("Login Router", () => {
         };
         sut.route(httpRequest);
         expect(authUseCase.email).toBe(httpRequest.body.email);
+    });
+    test("Should return 401 when invalid credentials are provided", () => {
+        const { sut, authUseCase } = makeSut();
+        const httpRequest = {
+            body: {
+                email: "invalid@email",
+                password: "invalid_password",
+            },
+        };
+        const httpResponse = sut.route(httpRequest);
+        expect(httpResponse.status).toBe(401);
+        expect(httpResponse.body).toEqual(new UnauthorizedError());
     });
 });

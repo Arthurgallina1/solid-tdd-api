@@ -1,7 +1,10 @@
 const LoginRouter = require("./login-router");
-const MissingParamError = require("../helpers/missing-param");
-const UnauthorizedError = require("../helpers/unauthorized-error");
-const InvalidParamError = require("../helpers/invalid-param");
+const {
+    InvalidParamError,
+    MissingParamError,
+    ServerError,
+    UnauthorizedError,
+} = require("../errors");
 
 const makeSut = () => {
     // isso é um mock pra auxiliar os testes no login router (um spy)
@@ -176,5 +179,35 @@ describe("Login Router", () => {
         const httpResponse = await sut.route(httpRequest);
         expect(httpResponse.status).toBe(400);
         expect(httpResponse.body).toEqual(new InvalidParamError("email"));
+    });
+
+    test("Should return 500 if no EmailValidator is provided", async () => {
+        const authUseCaseSpy = makeAuthUseCase();
+        const sut = new LoginRouter(authUseCaseSpy);
+
+        const httpRequest = {
+            body: {
+                email: "invalid_email@com.br",
+                password: "any_pw",
+            },
+        };
+        const httpResponse = await sut.route(httpRequest);
+        expect(httpResponse.status).toBe(500);
+        expect(httpResponse.body).toEqual(new ServerError());
+    });
+
+    test("Should return 500 if no EmailValidator has no isValid method", async () => {
+        const authUseCaseSpy = makeAuthUseCase();
+        const sut = new LoginRouter(authUseCaseSpy, {});
+
+        const httpRequest = {
+            body: {
+                email: "invalid_email@com.br",
+                password: "any_pw",
+            },
+        };
+        const httpResponse = await sut.route(httpRequest);
+        expect(httpResponse.status).toBe(500);
+        expect(httpResponse.body).toEqual(new ServerError());
     });
 });

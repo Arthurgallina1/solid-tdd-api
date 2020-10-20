@@ -1,15 +1,15 @@
 class AuthUseCase {
     async auth(email) {
         if (!email) {
-            return null;
+            throw new Error();
         }
     }
 }
 
 describe("Auth useCase", () => {
-    test("should return null if no email is provided", async () => {
+    test("should throw if no email is provided", async () => {
         const sut = new AuthUseCase();
-        const acessToken = await sut.auth();
-        expect(acessToken).toBeNull();
+        const promise = sut.auth();
+        expect(promise).rejects.toThrow();
     });
 });
